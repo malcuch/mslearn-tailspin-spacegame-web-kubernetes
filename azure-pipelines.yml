@@ -13,9 +13,11 @@ variables:
 stages:
 - stage: 'Build'
   displayName: 'Build and push'
+  pool:
+    vmImage: 'ubuntu-latest'
   jobs:  
   - job: 'Build'
-    displayName: 'Build job'
+    displayName: 'Build job'    
     steps:
     - task: Docker@2
       displayName: 'Build and push the image to container registry'
@@ -44,6 +46,8 @@ stages:
 - stage: 'Deploy'
   displayName: 'Deploy the containers'
   dependsOn: Build
+  pool:
+    vmImage: 'ubuntu-latest'  
   jobs:
   - deployment: Deploy
     displayName: Deploy
