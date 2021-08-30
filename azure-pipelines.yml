@@ -9,6 +9,7 @@ variables:
   imagePullSecret: 'secret'
   containerRegistryConnection: 'RMS_Platform_POC_ACR'
   kubernetesServiceConnection: 'RMS_Platform_POC_Cluster'
+  containerRegistryName: 'rmsplatformpocacr.azurecr.io'
 
 stages:
 - stage: 'Build'
@@ -52,8 +53,6 @@ stages:
   - deployment: Deploy
     displayName: Deploy
     environment: 'demo.default'
-    variables:
-    - group: env-poc-demo
     strategy:
       runOnce:
         deploy:
@@ -65,7 +64,7 @@ stages:
             inputs:
               action: createSecret
               secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(containerRegistryConnection)
+              dockerRegistryEndpoint: $()
               kubernetesServiceConnection: $(kubernetesServiceConnection)
               namespace: 'default'
           - task: KubernetesManifest@0
@@ -80,7 +79,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(RegistryName)/$(webRepository):$(tag)
-                $(RegistryName)/$(leaderboardRepository):$(tag)
+                $(ContainerRegistryName)/$(webRepository):$(tag)
+                $(ContainerRegistryName)/$(leaderboardRepository):$(tag)
 
 
